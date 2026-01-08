@@ -6,9 +6,9 @@ An unofficial API for CBX (Confederação Brasileira de Xadrez). This project us
 
 ```text
 ├── cbx
+│   ├── __init__.py
 │   ├── announcements.py
 │   ├── base.py
-│   ├── __init__.py
 │   ├── news.py
 │   ├── players.py
 │   └── tournaments.py
@@ -23,12 +23,17 @@ An unofficial API for CBX (Confederação Brasileira de Xadrez). This project us
 It is recommended to use a Python virtual environment.
 
 1. Clone the repository.
+
+```bash
+git clone https://github.com/emerson-proenca/cbx_api.git
+cd cbx_api
+```
+
 2. Create and activate a virtual environment:
 
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-
 ```
 
 3. Install dependencies:
