@@ -40,7 +40,7 @@ class CBXTournaments(Scraper):
 
         return page_tournaments
 
-    def run(self, year="2025", month="1"):
+    def run(self, year="2026", month=""):
         """Main execution loop for the scraper."""
         try:
             self.logger.info(f"Starting tournament extraction for {month}/{year}...")
@@ -61,9 +61,7 @@ class CBXTournaments(Scraper):
             current_page = 1
             while True:
                 self.logger.info(f"Processing page {current_page}...")
-                response = self.session.post(
-                    self.path, data=payload, timeout=30
-                )
+                response = self.session.post(self.path, data=payload, timeout=30)
                 response.raise_for_status()
                 soup = BeautifulSoup(response.text, "html.parser")
 
@@ -96,4 +94,4 @@ class CBXTournaments(Scraper):
 
 if __name__ == "__main__":
     scraper = CBXTournaments("tournaments", "cbx_id", "torneios")
-    scraper.run(year="2025", month="")
+    scraper.run()

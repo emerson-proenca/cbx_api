@@ -1,8 +1,7 @@
 import re
 
+from base import Scraper
 from bs4 import BeautifulSoup
-
-from .base import Scraper
 
 
 class CBXPlayers(Scraper):
@@ -34,11 +33,11 @@ class CBXPlayers(Scraper):
                     )
         return players
 
-    def run(self, target_state="SE"):
+    def run(self, target_state: str):
         """Main execution flow for scraping and pagination."""
         try:
-            # 1. Initial GET and State selection
-            response = self.session.get(self.DOMAIN)
+            # Initial GET and State selection
+            response = self.session.get(self.path)
             soup = BeautifulSoup(response.text, "html.parser")
 
             payload = self.get_asp_vars(soup)
@@ -59,11 +58,11 @@ class CBXPlayers(Scraper):
                 response = self.session.post(self.path, data=payload)
                 soup = BeautifulSoup(response.text, "html.parser")
 
-                # 2. Extract and Save
+                # Extract and Save
                 players = self.extract_page_data(soup)
                 self.save_to_db(players)
 
-                # 3. Pagination Logic
+                # Pagination Logic
                 next_page_num = current_page + 1
                 next_page_link = soup.find(
                     "a", href=re.compile(rf"Page\${next_page_num}")
@@ -88,5 +87,5 @@ class CBXPlayers(Scraper):
 
 
 if __name__ == "__main__":
-    scraper = CBXPlayers("players", "cbx_id", "jogadores")
-    scraper.run(target_state="")
+    scraper = CBXPlayers("players", "cbx_id", "rating")
+    scraper.run(target_state="SP") # Required
