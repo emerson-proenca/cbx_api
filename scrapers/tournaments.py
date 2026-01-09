@@ -40,7 +40,7 @@ class CBXTournaments(Scraper):
 
         return page_tournaments
 
-    def run(self, year="2026", month=""):
+    def run(self, year: str, month: str):
         """Main execution loop for the scraper."""
         try:
             self.logger.info(f"Starting tournament extraction for {month}/{year}...")

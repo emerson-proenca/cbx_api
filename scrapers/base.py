@@ -18,8 +18,8 @@ class Scraper:
         self.session = self._init_session()
         self.table_name: str = table_name
         self.primary_key: str = primary_key
-        self.DOMAIN: str = "https://www.cbx.org.br/"
-        self.path: str = f"https://www.cbx.org.br/{path}/"
+        self.DOMAIN: str = "https://cbx.org.br/"
+        self.path: str = f"https://cbx.org.br/{path}/"
 
     def _setup_logging(self):
         logging.basicConfig(

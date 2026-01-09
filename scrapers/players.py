@@ -88,4 +88,4 @@ class CBXPlayers(Scraper):
 
 if __name__ == "__main__":
     scraper = CBXPlayers("players", "cbx_id", "rating")
-    scraper.run(target_state="SP") # Required
+    scraper.run()
