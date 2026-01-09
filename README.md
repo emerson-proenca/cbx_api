@@ -1,21 +1,23 @@
 # Unofficial CBX API
 
-An unofficial API for CBX (Confederação Brasileira de Xadrez). This project uses WebScraping to gather data from https://cbx.org.br/ and Supabase to store data regarding announcements, news, players, and tournaments.
+An unofficial API for CBX (Confederação Brasileira de Xadrez). You can access the API/DATA here.
+This project uses WebScraping to gather data from https://cbx.org.br/ Typer to create a CLI and Supabase to store data regarding Announcements, News, Players, and Tournaments.
 
 ## Project Structure
 
 ```text
-├── cbx
-│   ├── __init__.py
+├── LICENSE
+├── project.py
+├── README.md
+├── requirements.txt
+├── scrapers
 │   ├── announcements.py
 │   ├── base.py
+│   ├── __init__.py
 │   ├── news.py
 │   ├── players.py
 │   └── tournaments.py
-├── LICENSE
-├── README.md
-├── requirements.txt
-└── supabase.sql
+└── test_project.py
 ```
 
 ## Setup
@@ -40,10 +42,9 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 ```bash
 pip install -r requirements.txt
-
 ```
 
-## Database Access
+## API/DATA Access
 
 The data is hosted on Supabase. Access is restricted to **SELECT** queries only.
 
