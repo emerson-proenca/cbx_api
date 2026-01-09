@@ -1,7 +1,7 @@
 # Unofficial CBX API
 
-An unofficial API for CBX (Confederação Brasileira de Xadrez). You can access the API/DATA here.
-This project uses WebScraping to gather data from https://cbx.org.br/ Typer to create a CLI and Supabase to store data regarding Announcements, News, Players, and Tournaments.
+An unofficial API for [CBX](https://cbx.org.br/) (Confederação Brasileira de Xadrez). You can access the [API/DATA here](https://github.com/emerson-proenca/cbx_api?tab=readme-ov-file#apidata-access).
+This project uses WebScraping to gather data, [Typer](https://github.com/fastapi/typer) to create a CLI and [Supabase](https://supabase.com/docs/reference/python/) to store Announcements, News, Players, and Tournaments table.
 
 ## Project Structure
 
