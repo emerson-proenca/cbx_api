@@ -1,7 +1,8 @@
 import re
 
-from base import Scraper
 from bs4 import BeautifulSoup
+
+from .base import Scraper
 
 
 class CBXTournaments(Scraper):

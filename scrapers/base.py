@@ -12,12 +12,12 @@ from urllib3.util.retry import Retry
 
 
 class Scraper:
-    def __init__(self, table_name: str, primary_key: str, path: str):
+    def __init__(self, table: str, pk: str, path: str):
         self.logger = self._setup_logging()
         self.supabase = self._init_supabase()
         self.session = self._init_session()
-        self.table_name: str = table_name
-        self.primary_key: str = primary_key
+        self.table: str = table
+        self.pk: str = pk
         self.DOMAIN: str = "https://cbx.org.br/"
         self.path: str = f"https://cbx.org.br/{path}/"
 
@@ -32,7 +32,7 @@ class Scraper:
     def _init_supabase(self) -> Client:
         load_dotenv()
         url = os.environ.get("SUPABASE_URL")
-        key = os.environ.get("SUPABASE_SECRET_KEY")
+        key = os.environ.get("SUPABASE_KEY")
         if not url or not key:
             raise ValueError("Missing Supabase credentials in .env")
         return create_client(url, key)
@@ -74,9 +74,7 @@ class Scraper:
         if not data:
             return
         try:
-            self.supabase.table(self.table_name).upsert(
-                data, on_conflict=self.primary_key
-            ).execute()
+            self.supabase.table(self.table).upsert(data, on_conflict=self.pk).execute()
             self.logger.info(f"Successfully saved {len(data)} rows.")
         except Exception as e:
             self.logger.critical(f"Database error: {e}")

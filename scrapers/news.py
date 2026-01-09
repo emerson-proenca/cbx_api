@@ -1,8 +1,9 @@
 import re
 from datetime import datetime, timedelta, timezone
 
-from base import Scraper
 from bs4 import BeautifulSoup
+
+from .base import Scraper
 
 
 class CBXNews(Scraper):

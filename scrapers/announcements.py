@@ -1,8 +1,9 @@
 import re
 from datetime import datetime, timedelta, timezone
 
-from base import Scraper
 from bs4 import BeautifulSoup
+
+from .base import Scraper
 
 
 class CBXAnnouncements(Scraper):
@@ -67,7 +68,7 @@ class CBXAnnouncements(Scraper):
                 )
                 all_links = soup.find_all("a", href=True)
                 for link in all_links:
-                    if "Page$" in link['href']:
+                    if "Page$" in link["href"]:
                         self.logger.warning(f"Found potential link: {link['href']}")
                 self.logger.warning(pagination_link)
 
