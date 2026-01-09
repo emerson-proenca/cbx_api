@@ -1,16 +1,11 @@
 import re
 
-from base import WebFormsScraper
 from bs4 import BeautifulSoup
 
+from .base import Scraper
 
-class CBXScraper(WebFormsScraper):
-    def __init__(self, target_state: str = "SE"):
-        # Initialize parent with Supabase table details
-        super().__init__(table_name="players", primary_key="cbx_id")
-        self.base_url = "https://www.cbx.org.br/rating"
-        self.target_state = target_state
 
+class CBXPlayers(Scraper):
     def extract_page_data(self, soup: BeautifulSoup) -> list:
         """Parses the rating table for player data."""
         table = soup.find("table", id="ContentPlaceHolder1_gdvMain")
@@ -39,29 +34,29 @@ class CBXScraper(WebFormsScraper):
                     )
         return players
 
-    def run(self):
+    def run(self, target_state="SE"):
         """Main execution flow for scraping and pagination."""
         try:
             # 1. Initial GET and State selection
-            response = self.session.get(self.base_url)
+            response = self.session.get(self.DOMAIN)
             soup = BeautifulSoup(response.text, "html.parser")
 
             payload = self.get_asp_vars(soup)
             payload.update(
                 {
                     "__EVENTTARGET": "ctl00$ContentPlaceHolder1$cboUF",
-                    "ctl00$ContentPlaceHolder1$cboUF": self.target_state,
+                    "ctl00$ContentPlaceHolder1$cboUF": target_state,
                 }
             )
 
             current_page = 1
             while True:
                 self.logger.info(
-                    f"Processing page {current_page} for {self.target_state}..."
+                    f"Processing page {current_page} for {target_state}..."
                 )
 
                 # Fetch page content
-                response = self.session.post(self.base_url, data=payload)
+                response = self.session.post(self.path, data=payload)
                 soup = BeautifulSoup(response.text, "html.parser")
 
                 # 2. Extract and Save
@@ -80,7 +75,7 @@ class CBXScraper(WebFormsScraper):
                         {
                             "__EVENTTARGET": "ctl00$ContentPlaceHolder1$gdvMain",
                             "__EVENTARGUMENT": f"Page${next_page_num}",
-                            "ctl00$ContentPlaceHolder1$cboUF": self.target_state,
+                            "ctl00$ContentPlaceHolder1$cboUF": target_state,
                         }
                     )
                     current_page += 1
@@ -93,5 +88,5 @@ class CBXScraper(WebFormsScraper):
 
 
 if __name__ == "__main__":
-    scraper = CBXScraper(target_state="SE")
-    scraper.run()
+    scraper = CBXPlayers("players", "cbx_id", "jogadores")
+    scraper.run(target_state="")

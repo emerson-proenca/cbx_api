@@ -1,14 +1,11 @@
 import re
 from datetime import datetime, timedelta, timezone
 
-from base import WebFormsScraper
+from base import Scraper
 from bs4 import BeautifulSoup
 
-URL = "https://www.cbx.org.br/comunicados"
-BASE_DOMAIN = "https://www.cbx.org.br"
 
-
-class CBXScraper(WebFormsScraper):
+class CBXAnnouncements(Scraper):
     def extract_page_data(self, soup: BeautifulSoup) -> list:
         page_notices = []
         rows = soup.find_all("tr")
@@ -27,11 +24,10 @@ class CBXScraper(WebFormsScraper):
                 iso_datetime = dt_tz.isoformat()
 
                 href = link_tag.get("href", "")
-                full_link = f"{BASE_DOMAIN.rstrip('/')}/{href.lstrip('/')}"
+                full_link = f"{self.DOMAIN.rstrip('/')}/{href.lstrip('/')}"
                 announcement_id = (
-                    href.split("comunicado/")[1].split("/")[0]
-                    if "comunicado/" in href
-                    else None
+                    href.split(f"{self.path}/")[1].split("/")[0]
+                    if f"{self.path}/" in href else None
                 )
 
                 page_notices.append(
@@ -49,7 +45,7 @@ class CBXScraper(WebFormsScraper):
         """Main execution logic for the scraper."""
         try:
             self.logger.info("Starting announcements extraction...")
-            response = self.session.get(URL, timeout=30)
+            response = self.session.get(self.DOMAIN, timeout=30)
             response.raise_for_status()
 
             soup = BeautifulSoup(response.text, "html.parser")
@@ -75,7 +71,7 @@ class CBXScraper(WebFormsScraper):
                         }
                     )
 
-                    response = self.session.post(URL, data=payload, timeout=30)
+                    response = self.session.post(self.DOMAIN, data=payload, timeout=30)
                     response.raise_for_status()
                     soup = BeautifulSoup(response.text, "html.parser")
                     current_page += 1
@@ -88,5 +84,5 @@ class CBXScraper(WebFormsScraper):
 
 
 if __name__ == "__main__":
-    scraper = CBXScraper(table_name="announcements", primary_key="announcement_id")
+    scraper = CBXAnnouncements("announcements", "announcement_id", "comunicados")
     scraper.run()

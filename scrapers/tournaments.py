@@ -1,16 +1,10 @@
 import re
 
-from base import WebFormsScraper
+from base import Scraper
 from bs4 import BeautifulSoup
 
 
-class CBXScraper(WebFormsScraper):
-    def __init__(self):
-        # Initialize with specific table name and primary key
-        super().__init__(table_name="tournaments", primary_key="cbx_id")
-        self.base_url = "https://www.cbx.org.br/"
-        self.tournaments_url = f"{self.base_url}torneios/"
-
+class CBXTournaments(Scraper):
     def extract_page_data(self, soup: BeautifulSoup) -> list:
         """Extracts data from each tournament table on the current page."""
         tables = soup.find_all("table", attrs={"class": "torneios"})
@@ -31,7 +25,7 @@ class CBXScraper(WebFormsScraper):
                     "location": self.get_grid_field(soup, "lblLocal", i),
                     "period": self.get_grid_field(soup, "lblPeriodo", i),
                     "notes": self.get_grid_field(soup, "lblObs", i),
-                    "regulation_url": (self.base_url + str(regulation_path))
+                    "regulation_url": (self.DOMAIN + str(regulation_path))
                     if regulation_path
                     else None,
                     "status": self.get_grid_field(soup, "lblStatus", i),
@@ -50,7 +44,7 @@ class CBXScraper(WebFormsScraper):
         """Main execution loop for the scraper."""
         try:
             self.logger.info(f"Starting tournament extraction for {month}/{year}...")
-            response = self.session.get(self.tournaments_url, timeout=30)
+            response = self.session.get(self.path, timeout=30)
             response.raise_for_status()
             soup = BeautifulSoup(response.text, "html.parser")
 
@@ -68,7 +62,7 @@ class CBXScraper(WebFormsScraper):
             while True:
                 self.logger.info(f"Processing page {current_page}...")
                 response = self.session.post(
-                    self.tournaments_url, data=payload, timeout=30
+                    self.path, data=payload, timeout=30
                 )
                 response.raise_for_status()
                 soup = BeautifulSoup(response.text, "html.parser")
@@ -101,5 +95,5 @@ class CBXScraper(WebFormsScraper):
 
 
 if __name__ == "__main__":
-    scraper = CBXScraper()
+    scraper = CBXTournaments("tournaments", "cbx_id", "torneios")
     scraper.run(year="2025", month="")

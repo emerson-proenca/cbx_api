@@ -11,13 +11,15 @@ from supabase import Client, create_client
 from urllib3.util.retry import Retry
 
 
-class WebFormsScraper:
-    def __init__(self, table_name: str, primary_key: str):
+class Scraper:
+    def __init__(self, table_name: str, primary_key: str, path: str):
         self.logger = self._setup_logging()
         self.supabase = self._init_supabase()
         self.session = self._init_session()
-        self.table_name = table_name
-        self.primary_key = primary_key
+        self.table_name: str = table_name
+        self.primary_key: str = primary_key
+        self.DOMAIN: str = "https://www.cbx.org.br/"
+        self.path: str = f"https://www.cbx.org.br/{path}/"
 
     def _setup_logging(self):
         logging.basicConfig(

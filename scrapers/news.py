@@ -1,14 +1,11 @@
 import re
 from datetime import datetime, timedelta, timezone
 
-from base import WebFormsScraper
+from base import Scraper
 from bs4 import BeautifulSoup
 
-URL = "https://www.cbx.org.br/noticias"
-BASE_DOMAIN = "https://www.cbx.org.br/"
 
-
-class CBXScraper(WebFormsScraper):
+class CBXNews(Scraper):
     def extract_page_data(self, soup: BeautifulSoup) -> list[dict]:
         """Parses the news table for titles, links, and dates."""
         news_list = []
@@ -26,7 +23,7 @@ class CBXScraper(WebFormsScraper):
                 iso_datetime = dt_tz.isoformat()
 
                 href = link_tag.get("href", "")
-                full_link = f"{BASE_DOMAIN.rstrip('/')}/{href.lstrip('/')}"
+                full_link = f"{self.DOMAIN.rstrip('/')}/{href.lstrip('/')}"
                 news_id = (
                     href.split("noticia/")[1].split("/")[0]
                     if "noticia/" in href
@@ -44,7 +41,7 @@ class CBXScraper(WebFormsScraper):
 
     def run(self):
         """Main execution loop for pagination and data storage."""
-        response = self.session.get(URL)
+        response = self.session.get(self.path)
         soup = BeautifulSoup(response.text, "html.parser")
         current_page = 1
 
@@ -69,7 +66,7 @@ class CBXScraper(WebFormsScraper):
                     }
                 )
 
-                response = self.session.post(URL, data=payload)
+                response = self.session.post(self.path, data=payload)
                 soup = BeautifulSoup(response.text, "html.parser")
                 current_page += 1
             else:
@@ -78,5 +75,5 @@ class CBXScraper(WebFormsScraper):
 
 
 if __name__ == "__main__":
-    scraper = CBXScraper(table_name="news", primary_key="news_id")
+    scraper = CBXNews("news", "news_id", "noticias")
     scraper.run()

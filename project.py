@@ -1,8 +1,11 @@
+import typer
 
 
 def main():
-    pass
+    print("hello emerson")
 
+def 
+def news()
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)
